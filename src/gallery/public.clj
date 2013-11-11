@@ -51,9 +51,8 @@
 (defroutes all-routes
   (GET "/" []
        (in-frame ""
-                 [:p {:class "page-middle"}
-                  [:p "Call me and leave a message on my number below."]
-                  [:p "+44 1290 211866"]]))
+                 [:p {:class "page-middle"} "Call me and leave a message on my number below."]
+                 [:p {:class "page-middle"} "+441290211866"]))
   (GET "/:pid" [pid]
        (if-let [artwork (data/get-artwork pid)]
          {:status 200 :body (gen-artwork artwork)} 
