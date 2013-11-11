@@ -3,6 +3,7 @@
             [compojure.handler :as handler]
             [compojure.route :as route]
             [hiccup.core :refer :all]
+            [hiccup.util :refer [url-encode]]
             [clj-time.coerce :as time-coerce]
             [clj-time.format :as time-format]
             [gallery.data :as data]])
@@ -13,7 +14,7 @@
    [:html
     [:head
      [:title "pollock.artcollective.io"]
-     [:link {:rel "stylesheet" :href "http://static.artcollective.io/shared.css"}]
+     [:link {:rel "stylesheet" :href "//static.artcollective.io/shared.css"}]
      [:link {:rel "stylesheet" :href "/static/ionicons/ionicons.css"}]
      [:link {:rel "stylesheet" :href "/static/main.css"}]]
     [:body
@@ -22,16 +23,25 @@
         (if (= title "")
           "pollock."
           [:a {:href "/" :class "local"} "pollock."])
-        [:a {:href "http://artcollective.io" :class "parent"} "artcollective.io/"]
+        [:a {:href "//artcollective.io" :class "parent"} "artcollective.io/"]
         [:span {:class "title"} title]]] rest)]]))
 
 (defn gen-artwork [artwork]
   (in-frame (:pid artwork)
-     [:p {:class "inspiration"}
-      [:a {:href (:inspiration_url artwork)}
-       [:i {:class "ion-play"}]
-       "Listen to the audio that lead to this artwork."]]
-     [:img {:src (:url artwork)}]))
+     [:img {:src (:url artwork)}]
+     [:ul {:class "inspiration"}
+      [:li
+       [:a {:href (:inspiration_url artwork)}
+        [:i {:class "ion-play"}]
+        "Listen to the audio that lead to this artwork."]]]
+     [:ul {:class "sharing"}
+      [:li
+       [:a {:href (str "//twitter.com/share?url="
+                       (url-encode (str "http://pollock.artcollective.io/"
+                                        (:pid artwork)))
+                       "&related=tombooth") }
+        [:i {:class "ion-social-twitter"}]
+        "Share this artwork with you friends."]]]))
 
 (defn gen-404 [pid]
   (in-frame pid

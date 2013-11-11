@@ -3,7 +3,8 @@
   :url "http://example.com/FIXME"
   :dependencies [[org.clojure/clojure "1.5.1"]
                  [compojure "1.1.6"]
-                 [ring-serve "0.1.2"]
+                 [ring-serve "0.1.2" :exclusions [hiccup]]
+                 [hiccup "1.0.4"]
                  [docopt "0.6.1"]
                  [korma "0.3.0-RC5"]
                  [org.postgresql/postgresql "9.2-1002-jdbc4"]
