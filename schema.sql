@@ -1,6 +1,6 @@
 
 CREATE TABLE users (
-	id char(65) NOT NULL PRIMARY KEY
+	id char(64) NOT NULL PRIMARY KEY
 );
 
 CREATE SEQUENCE artworks_id_seq;
