@@ -12,20 +12,26 @@
    "<!DOCTYPE html>"
    [:html
     [:head
-     [:title (str title " - Pollock - artcollective.io")]
-     [:link {:rel "stylesheet" :href "http://static.artcollective.io/shared.css"}]]
+     [:title "pollock.artcollective.io"]
+     [:link {:rel "stylesheet" :href "http://static.artcollective.io/shared.css"}]
+     [:link {:rel "stylesheet" :href "/static/ionicons/ionicons.css"}]
+     [:link {:rel "stylesheet" :href "/static/main.css"}]]
     [:body
      (concat
       [[:h1
-        [:a {:href "/" :class "local"} "pollock."]
+        (if (= title "")
+          "pollock."
+          [:a {:href "/" :class "local"} "pollock."])
         [:a {:href "http://artcollective.io" :class "parent"} "artcollective.io/"]
         [:span {:class "title"} title]]] rest)]]))
 
 (defn gen-artwork [artwork]
   (in-frame (:pid artwork)
-     [:img {:src (:url artwork)}]
-     [:p
-      [:a {:href (:inspiration_url artwork)} "Inspiration"]]))
+     [:p {:class "inspiration"}
+      [:a {:href (:inspiration_url artwork)}
+       [:i {:class "ion-play"}]
+       "Listen to the audio that lead to this artwork."]]
+     [:img {:src (:url artwork)}]))
 
 (defn gen-404 [pid]
   (in-frame pid
