@@ -3,7 +3,7 @@
   [:require [gallery.public :as public]
             [gallery.private :as private]
             [gallery.data :as data]
-            [ring.util.serve :refer [serve-headless]]
+            [ring.server.standalone :refer [serve]]
             [docopt.core :as dc]
             [docopt.match :as dm]])
 
@@ -31,11 +31,12 @@ Options:
         db (data/setup-db (arg-map "--db")
                           (arg-map "--db-server")
                           (arg-map "--db-user")
-                          (arg-map "--db-password"))]
+                          (arg-map "--db-password"))
+        server-args { :port port :open-browser? false }]
     (cond 
       (or (nil? arg-map)
           (arg-map "--help")) (println usage-string)
           (arg-map "--version") (println version)
-          (arg-map "public") (serve-headless public/all-routes port)
-          (arg-map "private") (serve-headless private/all-routes port))))
+          (arg-map "public") (serve public/all-routes server-args)
+          (arg-map "private") (serve private/all-routes server-args))))
 
