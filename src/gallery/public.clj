@@ -14,26 +14,23 @@
    [:html
     [:head
      [:title "pollock.artcollective.io"]
-     [:link {:rel "stylesheet" :href "//static.artcollective.io/shared.css"}]
      [:link {:rel "stylesheet" :href "/static/ionicons/ionicons.css"}]
      [:link {:rel "stylesheet" :href "/static/main.css"}]]
     [:body
-     (concat
-      [[:h1
-        (if (= title "")
-          "pollock."
-          [:a {:href "/" :class "local"} "pollock."])
-        [:a {:href "//artcollective.io" :class "parent"} "artcollective.io/"]
-        [:span {:class "title"} title]]] rest)]]))
+     rest]]))
 
 (defn gen-artwork [artwork]
-  (in-frame (:pid artwork)
-     [:img {:src (:url artwork)}]
+  [:div {:class "exhibit"}
+    [:div {:class "notes"}
+     [:h1 "Pollock"]
+     [:h2 (str "Experimental #" (:pid artwork))]
+     [:p "Some blurb about how this piece of work was made"]
+     [:p {:class "method"} "digital canvas, binary paint"]
      [:ul {:class "inspiration"}
       [:li
        [:a {:href (:inspiration_url artwork)}
         [:i {:class "ion-play"}]
-        "Listen to the audio that lead to this artwork."]]]
+        "Listen to the inspiration."]]]
      [:ul {:class "sharing"}
       [:li
        [:a {:href (str "//twitter.com/share?url="
@@ -41,7 +38,8 @@
                                         (:pid artwork)))
                        "&related=tombooth") }
         [:i {:class "ion-social-twitter"}]
-        "Share this artwork with you friends."]]]))
+        "Share with your friends."]]]]
+     [:div {:class "artwork"} [:img {:src (:url artwork)}]]])
 
 (defn gen-404 [pid]
   (in-frame pid
@@ -55,7 +53,7 @@
                  [:p {:class "page-middle"} "+441290211866"]))
   (GET "/:pid" [pid]
        (if-let [artwork (data/get-artwork pid)]
-         {:status 200 :body (gen-artwork artwork)} 
+         {:status 200 :body (in-frame "" (gen-artwork artwork))} 
          {:status 404 :body (gen-404 pid)}))
   (route/resources "/static/")
   (route/not-found "Not Found"))

@@ -1,12 +1,77 @@
-
-.page-middle {
-    text-align: center;
-    font-size: 1.5em;
+body {
+	background-color: #fdfdfd;
+	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serfif, sans;
+	color: #444;
+	margin: 2em 2em 2em 2em;
+        padding: 0;
 }
+
+h1 {
+	font-size: 1em;
+	margin: 0;
+}
+
+h2 {
+    font-size: 1em;
+    font-weight: normal;
+    font-style: italic;
+    margin: 0;
+}
+
+a,
+a:visited {
+	color: #555;
+}
+
+a:hover {
+	color: #333;
+}
+
+h1 a.parent,
+h1 a.parent:visited {
+	color: #ddd;
+}
+
+h1 a.parent:hover {
+	color: #ccc;
+}
+
+h1 span.title {
+	color: #555;
+}
+
+img {
+        width: 100%;
+}
+
+.exhibit {
+        display: flex;
+        margin-bottom: 2em;
+}
+
+.artwork {
+	border: 1px solid #eee;
+        flex: 0 1 auto;
+}
+
+.notes {
+    display: inline-block;
+    flex: 1 0 auto;
+    width: 250px;
+    margin-right: 2em;
+    margin-top: 4em;
+}
+
+.notes p,
+.inspiration,
+.sharing {
+    font-size: 0.9em;
+}
+
 
 .inspiration,
 .sharing {
-    font-size: 1.5em;
+    font-size: 1em;
     list-style: none;
     padding: 0;
     margin: 0;
@@ -26,3 +91,4 @@
 .sharing i {
     margin-right: 5px;
 }
+
