@@ -42,18 +42,16 @@
      [:div {:class "artwork"} [:img {:src (:url artwork)}]]])
 
 (defn gen-404 [pid]
-  (in-frame pid
-            [:h2 "Artwork not found"]))
+  (in-frame [:h2 "Artwork not found"]))
 
 
 (defroutes all-routes
   (GET "/" []
-       (in-frame ""
-                 [:p {:class "page-middle"} "Call me and leave a message on my number below."]
+       (in-frame [:p {:class "page-middle"} "Call me and leave a message on my number below."]
                  [:p {:class "page-middle"} "+441290211866"]))
   (GET "/:pid" [pid]
        (if-let [artwork (data/get-artwork pid)]
-         {:status 200 :body (in-frame "" (gen-artwork artwork))} 
+         {:status 200 :body (in-frame (gen-artwork artwork))} 
          {:status 404 :body (gen-404 pid)}))
   (route/resources "/static/")
   (route/not-found "Not Found"))
