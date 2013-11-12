@@ -24,8 +24,8 @@
     [:div {:class "notes"}
      [:h1 "Pollock"]
      [:h2 (str "Experimental #" (:pid artwork))]
-     [:p "Some blurb about how this piece of work was made"]
-     [:p {:class "method"} "digital canvas, binary paint"]
+     [:p "Some blurb about how this piece of work was made."]
+     [:p {:class "method"} "digital canvas, binary paint."]
      [:ul {:class "inspiration"}
       [:li
        [:a {:href (:inspiration_url artwork)}
