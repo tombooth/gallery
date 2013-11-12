@@ -8,7 +8,7 @@
             [clj-time.format :as time-format]
             [gallery.data :as data]])
 
-(defn in-frame [title & rest]
+(defn in-frame [& rest]
   (html
    "<!DOCTYPE html>"
    [:html
@@ -24,8 +24,8 @@
 (defn gen-artwork [artwork]
   [:div {:class "exhibit"}
     [:div {:class "notes"}
-     [:h1 [:a {:href "/"} "Pollock"]]
-     [:h2 [:a {:href (str "/" (:pid artwork))} (str "Experimental #" (:pid artwork))]]
+     [:h2 [:a {:href "/"} "Pollock"]]
+     [:h3 [:a {:href (str "/" (:pid artwork))} (str "Experimental #" (:pid artwork))]]
      [:p "Some blurb about how this piece of work was made."]
      [:p "digital canvas, binary paint."]
      [:p (time-format/unparse date-formatter
@@ -49,8 +49,11 @@
   (in-frame [:h2 "Artwork not found"]))
 
 (defn gen-home []
-  (in-frame [:p {:class "page-middle"} "Call me and leave a message on my number below."]
-            [:p {:class "page-middle"} "+441290211866"]))
+  (in-frame
+   [:h1 [:b "Pollock: "] "Experimental Series - Audio"]
+   [:p "A set of generated art works using audio anaysis of clips derived from voicemail left on the telephone number below."]
+   [:p {:class "voicemail"} "Please call " [:b "+441290211866"] " to get your own artwork."]
+   (map gen-artwork (data/get-recent-artworks 5))))
 
 (defroutes all-routes
   (GET "/" [] (gen-home))

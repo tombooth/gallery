@@ -7,11 +7,18 @@ body {
 }
 
 h1 {
+    font-size: 2em;
+    margin: 0;
+    font-style: italic;
+    font-weight: normal;
+}
+
+h2 {
 	font-size: 1em;
 	margin: 0;
 }
 
-h2 {
+h3 {
     font-size: 1em;
     font-weight: normal;
     font-style: italic;
@@ -19,7 +26,8 @@ h2 {
 }
 
 h1 a,
-h2 a {
+h2 a,
+h3 a {
     text-decoration: none;
 }
 
@@ -34,6 +42,11 @@ a:hover {
 
 img {
         width: 100%;
+}
+
+.voicemail {
+    font-size: 1.5em;
+    margin-bottom: 2em;
 }
 
 .exhibit {

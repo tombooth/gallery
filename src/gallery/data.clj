@@ -50,3 +50,8 @@
 
 (defn get-artwork [pid]
   (first (select artworks (where {:pid pid}))))
+
+(defn get-recent-artworks [count]
+  (select artworks
+          (order :created :DESC)
+          (limit count)))
