@@ -19,13 +19,16 @@
     [:body
      rest]]))
 
+(def date-formatter (time-format/formatter "MMMMM yyyy"))
+
 (defn gen-artwork [artwork]
   [:div {:class "exhibit"}
     [:div {:class "notes"}
      [:h1 [:a {:href "/"} "Pollock"]]
      [:h2 [:a {:href (str "/" (:pid artwork))} (str "Experimental #" (:pid artwork))]]
      [:p "Some blurb about how this piece of work was made."]
-     [:p {:class "method"} "digital canvas, binary paint."]
+     [:p "digital canvas, binary paint."]
+     [:p (time-format/unparse date-formatter (time-coerce/from-sql-date (:created artwork)))]
      [:ul {:class "inspiration"}
       [:li
        [:a {:href (:inspiration_url artwork)}
