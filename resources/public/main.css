@@ -18,6 +18,11 @@ h2 {
     margin: 0;
 }
 
+h1 a,
+h2 a {
+    text-decoration: none;
+}
+
 a,
 a:visited {
 	color: #555;
@@ -25,19 +30,6 @@ a:visited {
 
 a:hover {
 	color: #333;
-}
-
-h1 a.parent,
-h1 a.parent:visited {
-	color: #ddd;
-}
-
-h1 a.parent:hover {
-	color: #ccc;
-}
-
-h1 span.title {
-	color: #555;
 }
 
 img {
