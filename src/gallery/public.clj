@@ -28,7 +28,8 @@
      [:h2 [:a {:href (str "/" (:pid artwork))} (str "Experimental #" (:pid artwork))]]
      [:p "Some blurb about how this piece of work was made."]
      [:p "digital canvas, binary paint."]
-     [:p (time-format/unparse date-formatter (time-coerce/from-sql-date (:created artwork)))]
+     [:p (time-format/unparse date-formatter
+                              (time-coerce/from-sql-date (:created artwork)))]
      [:ul {:class "inspiration"}
       [:li
        [:a {:href (:inspiration_url artwork)}
@@ -47,11 +48,12 @@
 (defn gen-404 [pid]
   (in-frame [:h2 "Artwork not found"]))
 
+(defn gen-home []
+  (in-frame [:p {:class "page-middle"} "Call me and leave a message on my number below."]
+            [:p {:class "page-middle"} "+441290211866"]))
 
 (defroutes all-routes
-  (GET "/" []
-       (in-frame [:p {:class "page-middle"} "Call me and leave a message on my number below."]
-                 [:p {:class "page-middle"} "+441290211866"]))
+  (GET "/" [] (gen-home))
   (GET "/:pid" [pid]
        (if-let [artwork (data/get-artwork pid)]
          {:status 200 :body (in-frame (gen-artwork artwork))} 
