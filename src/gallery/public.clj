@@ -14,7 +14,7 @@
    [:html
     [:head
      [:title "pollock.artcollective.io"]
-     [:link {:rel "stylesheet" :href "/static/ionicons/ionicons.css"}]
+     [:link {:rel "stylesheet" :href "/static/ionicons/ionicons.min.css"}]
      [:link {:rel "stylesheet" :href "/static/main.css"}]]
     [:body
      rest]]))
