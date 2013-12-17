@@ -12,7 +12,7 @@ CREATE TABLE artworks (
 	url varchar(512) NOT NULL,
 	inspiration_url varchar(512) NOT NULL,
         config varchar(5000),
-	created timestamp DEFAULT 'now()'
+	created timestamp DEFAULT now()
 );
 
 ALTER SEQUENCE artworks_id_seq owned by artworks.id;
