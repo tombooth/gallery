@@ -40,18 +40,24 @@
 (defn add-artwork [user artwork]
   (let [db-artwork (assoc artwork :user_id (:id user))
         stored-artwork (insert artworks (values db-artwork))
-        foo (println stored-artwork)
         pid (hashids/encrypt (:id stored-artwork) hashids-salt)
         pid-artwork (update artworks
                             (set-fields {:pid pid})
                             (where {:id (:id stored-artwork)}))]
-    (println pid-artwork)
     pid-artwork))
 
+(defn add-pid-to-artwork [artwork]
+  (dissoc (assoc artwork 
+                 :pid 
+                 (hashids/encrypt (:id artwork) hashids-salt))
+          :id))
+
 (defn get-artwork [pid]
-  (first (select artworks (where {:pid pid}))))
+  (let [id (hashids/decrypt pid hashids-salt)]
+    (add-pid-to-artwork (first (select artworks (where {:id id}))))))
 
 (defn get-recent-artworks [count]
-  (select artworks
-          (order :created :DESC)
-          (limit count)))
+  (map add-pid-to-artwork
+       (select artworks
+               (order :created :DESC)
+               (limit count))))
