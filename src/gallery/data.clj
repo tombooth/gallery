@@ -9,8 +9,8 @@
 
 (defentity artworks)
 
-(defn setup-db [db server user password]
-  (let [conn (create-db (postgres {:db db :user user :password password :host server}))]
+(defn setup-db [spec]
+  (let [conn (create-db spec)]
     (default-connection conn)
     conn))
 

@@ -2,15 +2,40 @@
   (:gen-class)
   [:require [gallery.public :as public]
             [gallery.private :as private]
-            [gallery.data :as data]
+   [gallery.data :as data]
+   [gallery.schema :as schema]
             [ring.server.standalone :refer [serve]]
             [docopt.core :as dc]
-            [docopt.match :as dm]])
+   [docopt.match :as dm]
+   [korma.db :as db]])
+
+
+(defn- load-db [arg-map]
+  (if-let [sqlite-path (arg-map "--sqlite")]
+    (db/sqlite3 {:db sqlite-path})
+    (db/postgres {:db (arg-map "--db")
+                  :user (arg-map "--db-user")
+                  :password (arg-map "--db-password")
+                  :host (arg-map "--db-server")})))
+
+(defn- start-web [arg-map handler]
+  (let [port (Integer/parseInt (arg-map "--port"))]
+    (data/setup-db (load-db arg-map))
+    (serve handler {:port port :open-browser? false})))
+
+(defn- exec-schema [arg-map]
+  (let [db-spec (load-db arg-map)
+        schema-fn (if (arg-map "--drop")
+                    schema/drop-all
+                    schema/create-all)]
+    (schema/exec db-spec schema-fn)))
+
 
 (def usage-string "Gallery
 
 Usage:
-  gallery (public|private) [--port=<num>] --db=<db> --db-server=<server> --db-user=<user> --db-password=<password>
+  gallery (public|private) [--port=<num>] (--sqlite=<path>|--db=<db> --db-server=<server> --db-user=<user> --db-password=<password>)
+  gallery schema [--drop] (--sqlite=<path>|--db=<db> --db-server=<server> --db-user=<user> --db-password=<password>)
   gallery -h | --help
   gallery -v | --version
 
@@ -26,17 +51,12 @@ Options:
 (def version "Gallery 0.1.0")
 
 (defn -main [& args]
-  (let [arg-map (dm/match-argv (dc/parse usage-string) args)
-        port (Integer/parseInt (arg-map "--port"))
-        db (data/setup-db (arg-map "--db")
-                          (arg-map "--db-server")
-                          (arg-map "--db-user")
-                          (arg-map "--db-password"))
-        server-args { :port port :open-browser? false }]
+  (let [arg-map (dm/match-argv (dc/parse usage-string) args)]
     (cond 
       (or (nil? arg-map)
           (arg-map "--help")) (println usage-string)
           (arg-map "--version") (println version)
-          (arg-map "public") (serve public/all-routes server-args)
-          (arg-map "private") (serve private/all-routes server-args))))
+          (arg-map "public") (start-web arg-map public/all-routes)
+          (arg-map "private") (start-web arg-map private/all-routes)
+          (arg-map "schema") (exec-schema arg-map))))
 
