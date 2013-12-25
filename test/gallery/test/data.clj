@@ -8,11 +8,14 @@
 
 (def user-id (apply str (repeat 64 "4")))
 
+(defmacro db-test [& body]
+  `(do
+     (schema/exec test-db-spec schema/create-all)
+     (db/with-db test-db-spec ~@body)
+     (schema/exec test-db-spec schema/drop-all)))
+
 (deftest user-integration-test
   (testing "create and get"
-    (schema/exec test-db-spec schema/create-all)
-    (db/with-db test-db-spec
-      (data/create-user user-id)
-      (is (= user-id (:id (data/get-user user-id)))))
-    (schema/exec test-db-spec schema/drop-all)))
+    (db-test (data/create-user user-id)
+             (is (= user-id (:id (data/get-user user-id)))))))
 
