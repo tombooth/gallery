@@ -1,25 +1,11 @@
 (ns gallery.test.data
   [:require [clojure.test :refer :all]
-            [korma.db :as db]
-            [korma.core :as korma]
-            [clj-time.core :as time]
-            [clj-time.coerce :as coerce]
-            [gallery.schema :as schema]
+            [gallery.test.common :refer :all]
             [gallery.data :as data]])
-
-(def test-db-spec (db/sqlite3 {:db "test/test.db"}))
 
 (def user-id (apply str (repeat 64 "4")))
 
-(defmacro db-test [& body]
-  `(do
-     (schema/exec test-db-spec schema/create-all)
-     (try (db/with-db test-db-spec ~@body)
-          (finally (schema/exec test-db-spec schema/drop-all)))))
-
-(defn sql-stamp [year month day hour minute]
-  (coerce/to-timestamp
-    (time/date-time year month day hour minute 0 0)))
+(def artwork {:url "url" :inspiration_url "inspiration"})
 
 
 
@@ -42,7 +28,6 @@
                (nil? (:id validated-artwork)))))))
 
 
-(def artwork {:url "url" :inspiration_url "inspiration"})
 
 (deftest artwork-integration-tests
   (testing "artwork gets extra fields"
