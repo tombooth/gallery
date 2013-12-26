@@ -15,7 +15,7 @@
                  (schema/varchar :url 512 :not-null)
                  (schema/varchar :inspiration_url 512 :not-null)
                  (schema/varchar :config 5000)
-                 (schema/timestamp :created))))
+                 (schema/timestamp :created (schema/default (now))))))
 
 (defn drop-all []
   (lobos/drop
