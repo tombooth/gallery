@@ -18,7 +18,13 @@
   (coerce/to-timestamp
    (time/date-time year month day hour minute 0 0)))
 
-(defn make-request [resource web-app & params]
-   (web-app {:request-method :get :uri resource :params (first params)}))
+(defn make-request
+  ([resource web-app]
+     (web-app {:request-method :get :uri resource}))
+  ([resource web-app params]
+     (web-app {:request-method :get :uri resource :params params}))
+  ([method resource web-app params body]
+     (web-app {:request-method method :uri resource :params params
+               :body (java.io.StringReader. body)})))
 
 
