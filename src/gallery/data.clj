@@ -57,7 +57,8 @@
 
 (defn get-artwork [pid]
   (let [id (hashids/decrypt pid hashids-salt)]
-    (add-pid-to-artwork (first (select artworks (where {:id id}))))))
+    (if-let [artwork (first (select artworks (where {:id id})))]
+      (add-pid-to-artwork artwork))))
 
 (defn get-recent-artworks [count]
   (map add-pid-to-artwork

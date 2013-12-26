@@ -16,6 +16,9 @@
 
 (defn sql-stamp [year month day hour minute]
   (coerce/to-timestamp
-    (time/date-time year month day hour minute 0 0)))
+   (time/date-time year month day hour minute 0 0)))
+
+(defn make-request [resource web-app & params]
+   (web-app {:request-method :get :uri resource :params (first params)}))
 
 
