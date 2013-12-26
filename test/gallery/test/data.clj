@@ -32,6 +32,7 @@
 (deftest artwork-integration-tests
   (testing "artwork gets extra fields"
     (db-test
+     (data/create-user user-id)
      (let [saved-artwork (data/add-artwork {:id user-id} artwork)]
        (is (= user-id (:user_id saved-artwork)))
        (is (not (nil? (:pid saved-artwork)))))))

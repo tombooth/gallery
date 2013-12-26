@@ -9,7 +9,7 @@
                  [korma "0.3.0-RC5"]
                  [lobos "1.0.0-beta1"]
                  [org.postgresql/postgresql "9.2-1002-jdbc4"]
-                 [org.xerial/sqlite-jdbc "3.7.2"]
+                 [com.h2database/h2 "1.3.170"]
                  [cheshire "5.2.0"]
                  [hashobject/hashids "0.2.0"]
                  [clj-time "0.6.0"]]

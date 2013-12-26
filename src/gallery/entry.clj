@@ -2,17 +2,17 @@
   (:gen-class)
   [:require [gallery.public :as public]
             [gallery.private :as private]
-   [gallery.data :as data]
-   [gallery.schema :as schema]
+            [gallery.data :as data]
+            [gallery.schema :as schema]
             [ring.server.standalone :refer [serve]]
             [docopt.core :as dc]
-   [docopt.match :as dm]
-   [korma.db :as db]])
+            [docopt.match :as dm]
+            [korma.db :as db]])
 
 
 (defn- load-db [arg-map]
-  (if-let [sqlite-path (arg-map "--sqlite")]
-    (db/sqlite3 {:db sqlite-path})
+  (if-let [h2-path (arg-map "--h2")]
+    (db/h2 {:db h2-path})
     (db/postgres {:db (arg-map "--db")
                   :user (arg-map "--db-user")
                   :password (arg-map "--db-password")
@@ -34,8 +34,8 @@
 (def usage-string "Gallery
 
 Usage:
-  gallery (public|private) [--port=<num>] (--sqlite=<path>|--db=<db> --db-server=<server> --db-user=<user> --db-password=<password>)
-  gallery schema [--drop] (--sqlite=<path>|--db=<db> --db-server=<server> --db-user=<user> --db-password=<password>)
+  gallery (public|private) [--port=<num>] (--h2=<path>|--db=<db> --db-server=<server> --db-user=<user> --db-password=<password>)
+  gallery schema [--drop] (--h2=<path>|--db=<db> --db-server=<server> --db-user=<user> --db-password=<password>)
   gallery -h | --help
   gallery -v | --version
 

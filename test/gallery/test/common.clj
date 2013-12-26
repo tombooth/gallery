@@ -6,7 +6,7 @@
             [gallery.schema :as schema]])
 
 
-(def db-spec (db/sqlite3 {:db "test/test.db"}))
+(def db-spec (db/h2 {:db "test/test"}))
 
 (defmacro db-test [& body]
   `(do
