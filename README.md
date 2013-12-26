@@ -1,19 +1,7 @@
-# gallery
+# gallery [![Build Status](https://travis-ci.org/tombooth/gallery.png?branch=master)](https://travis-ci.org/tombooth/gallery)
 
-FIXME
-
-## Prerequisites
-
-You will need [Leiningen][1] 1.7.0 or above installed.
-
-[1]: https://github.com/technomancy/leiningen
-
-## Running
-
-To start a web server for the application, run:
-
-    lein ring server
+A webapp for displaying a dynamic collection of art on the internet.
 
 ## License
 
-Copyright © 2013 FIXME
+Copyright © 2013 Tom Booth
