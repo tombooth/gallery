@@ -37,20 +37,23 @@
     {:url (:url in)
      :inspiration_url (:inspiration_url in)}))
 
-(defn add-artwork [user artwork]
-  (let [db-artwork (assoc artwork :user_id (:id user))
-        stored-artwork (insert artworks (values db-artwork))
-        pid (hashids/encrypt (:id stored-artwork) hashids-salt)
-        pid-artwork (update artworks
-                            (set-fields {:pid pid})
-                            (where {:id (:id stored-artwork)}))]
-    pid-artwork))
-
 (defn add-pid-to-artwork [artwork]
   (dissoc (assoc artwork 
                  :pid 
                  (hashids/encrypt (:id artwork) hashids-salt))
           :id))
+
+(defn- store-artwork [artwork]
+  (-> (transaction (insert artworks (values artwork))
+                   (select artworks (aggregate (max :id) :id)))
+      first
+      :id))
+
+(defn add-artwork [user artwork]
+  (let [db-artwork (assoc artwork :user_id (:id user))
+        id (store-artwork db-artwork)
+        pid (hashids/encrypt id hashids-salt)]
+    (assoc db-artwork :pid pid)))
 
 (defn get-artwork [pid]
   (let [id (hashids/decrypt pid hashids-salt)]
