@@ -13,15 +13,23 @@
                  (schema/integer :id :auto-inc :primary-key)
                  (schema/char :user_id [:refer :users :id :on-delete :set-null])
                  (schema/varchar :url 512 :not-null)
-                 (schema/varchar :inspiration_url 512 :not-null)
                  (schema/varchar :config 5000)
+                 (schema/timestamp :created (schema/default (now)))))
+  (lobos/create
+   (schema/table :inspiration
+                 (schema/integer :id :auto-inc :primary-key)
+                 (schema/integer :artworks_id [:refer :artworks :id :on-delete :set-null])
+                 (schema/varchar :url 512 :not-null)
+                 (schema/varchar :mime_type 50 :not-null)
                  (schema/timestamp :created (schema/default (now))))))
 
 (defn drop-all []
   (lobos/drop
    (schema/table :users))
   (lobos/drop
-   (schema/table :artworks)))
+   (schema/table :artworks))
+  (lobos/drop
+   (schema/table :inspiration)))
 
 (defn exec [spec fn]
   (connectivity/with-spec-connection

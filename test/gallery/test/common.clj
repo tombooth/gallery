@@ -1,5 +1,6 @@
 (ns gallery.test.common
-  [:require [korma.db :as db]
+  [:require [clojure.test :refer :all]
+            [korma.db :as db]
             [korma.core :as korma]
             [clj-time.core :as time]
             [clj-time.coerce :as coerce]
@@ -10,6 +11,12 @@
 
 (defmacro db-test [& body]
   `(do
+     (schema/exec db-spec schema/create-all)
+     (try (db/with-db db-spec ~@body)
+          (finally (schema/exec db-spec schema/drop-all)))))
+
+(defmacro db-testing [name & body]
+  `(testing name
      (schema/exec db-spec schema/create-all)
      (try (db/with-db db-spec ~@body)
           (finally (schema/exec db-spec schema/drop-all)))))

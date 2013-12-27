@@ -8,6 +8,7 @@
 (def user-id (apply str (repeat 64 "3")))
 
 (deftest private-integration-tests
+  
   (testing "test end to end"
     (db-test
      (let [response (make-request :post (str "/" user-id)
@@ -18,5 +19,18 @@
        (is (not (nil? (data/get-user user-id))))
        (let [artworks (korma/select data/artworks)]
          (is (= 1 (count artworks)))
-         (is (= "asdf" (-> artworks first :url))))))))
+         (is (= "asdf" (-> artworks first :url)))))))
+
+  (db-testing "test add inspiration end point"
+              (let [user (data/create-user user-id)
+                    artwork (data/add-artwork user-id {:url ""})
+                    artwork-pid (:pid artwork)
+                    response (make-request :post (str "/" user-id "/" artwork-pid)
+                                           private/all-routes {}
+                                           "{\"url\":\"a\",\"mime_type\":\"b\"}")]
+                (is (= 200 (:status response)))
+                (let [inspiration (korma/select data/inspiration)]
+                  (is (= 1 (count inspiration)))
+                  (is (= "a" (-> inspiration first :url)))
+                  (is (= "b" (-> inspiration first :mime_type)))))))
 

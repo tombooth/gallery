@@ -21,6 +21,12 @@
 
 (def date-formatter (time-format/formatter "MMMMM yyyy"))
 
+(defn gen-inspiration [inspiration]
+  [:li
+    [:a {:href (:url inspiration)}
+      [:i {:class "ion-play"}]
+        "Listen to the inspiration."]])
+
 (defn gen-artwork [artwork]
   [:div {:class "exhibit"}
     [:div {:class "notes"}
@@ -30,11 +36,9 @@
      [:p "digital canvas, binary paint."]
      [:p (time-format/unparse date-formatter
                               (time-coerce/from-sql-date (:created artwork)))]
-     [:ul {:class "inspiration"}
-      [:li
-       [:a {:href (:inspiration_url artwork)}
-        [:i {:class "ion-play"}]
-        "Listen to the inspiration."]]]
+     (if (> (count (:inspiration artwork)) 0)
+       [:ul {:class "inspiration"}
+         (map gen-inspiration (:inspiration artwork))])
      [:ul {:class "sharing"}
       [:li
        [:a {:href (str "//twitter.com/share?url="
