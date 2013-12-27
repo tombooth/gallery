@@ -11,7 +11,6 @@ pom.xml
 .lein-env
 .lein-repl-history
 .#*
-test/test.db
-test/test.h2.db
+*.db
 .nrepl-port
 .lobos_stash.clj
