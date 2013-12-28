@@ -49,6 +49,10 @@
 
 ;; Artworks
 
+(defn- add-pids-to-artwork [artwork]
+  (add-pid-to-row (assoc artwork :inspiration
+                         (map add-pid-to-row (:inspiration artwork)))))
+
 (defn valid-artwork [in]
   (if (nil? (:url in))
     nil
@@ -65,12 +69,10 @@
     (if-let [artwork (first (select artworks
                                     (with inspiration)
                                     (where {:id id})))]
-      (add-pid-to-row
-       (assoc artwork :inspiration
-              (map add-pid-to-row (:inspiration artwork)))))))
+      (add-pids-to-artwork artwork))))
 
 (defn get-recent-artworks [count]
-  (map add-pid-to-row
+  (map add-pids-to-artwork
        (select artworks
                (with inspiration)
                (order :created :DESC)
@@ -93,4 +95,8 @@
           pid (hashids/encrypt id hashids-salt)]
       (assoc hash :pid pid))))
 
+(defn get-inspiration [artwork-pid inspiration-pid]
+  (let [artwork-id (hashids/decrypt artwork-pid hashids-salt)
+        inspiration-id (hashids/decrypt inspiration-pid hashids-salt)]
+    (first (select inspiration (where {:id inspiration-id :artworks_id artwork-id})))))
 

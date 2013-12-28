@@ -71,7 +71,14 @@
                 (data/add-inspiration artwork-pid {:url "" :mime_type ""})
                 (let [retrieved-artwork (data/get-artwork artwork-pid)]
                   (is (= 2 (count (:inspiration retrieved-artwork))))
-                  (is (every? #(-> % :pid nil? not) (:inspiration retrieved-artwork)))))))
+                  (is (every? #(-> % :pid nil? not) (:inspiration retrieved-artwork))))))
+
+  (db-testing "recent 1 with inspiration"
+              (let [artwork (data/add-artwork nil {:url ""})
+                    inspiration (data/add-inspiration (:pid artwork) {:url "" :mime_type ""})
+                    recent-artworks (data/get-recent-artworks 1)]
+                (is (= (:pid inspiration)
+                       (-> recent-artworks first :inspiration first :pid))))))
 
 
 
@@ -102,7 +109,23 @@
       (is (nil? (:id saved-inspiration)))
       (is (not (nil? (:pid saved-inspiration))))
       (is (= "" (:url saved-inspiration)))
-      (is (= "" (:mime_type saved-inspiration))))))
+      (is (= "" (:mime_type saved-inspiration)))))
+
+  (db-testing "getting inspiration if neither artwork or inspiration exist"
+              (is (nil? (data/get-inspiration "5r" "5r"))))
+
+  (db-testing "getting inspiration if only artwork"
+              (let [artwork (data/add-artwork nil {:url ""})]
+                (is (nil? (data/get-inspiration (:pid artwork) "5r")))))
+
+  (db-testing "getting inspiration"
+              (let [artwork (data/add-artwork nil {:url ""})
+                    artwork-pid (:pid artwork)
+                    inspiration (data/add-inspiration artwork-pid {:url "foo" :mime_type ""})
+                    inspiration-pid (:pid artwork)
+                    retrieved-inspiration (data/get-inspiration artwork-pid inspiration-pid)]
+                (is (not (nil? retrieved-inspiration)))
+                (is (= "foo" (:url retrieved-inspiration))))))
 
 
 

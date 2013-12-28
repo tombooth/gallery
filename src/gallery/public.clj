@@ -21,9 +21,9 @@
 
 (def date-formatter (time-format/formatter "MMMMM yyyy"))
 
-(defn gen-inspiration [inspiration]
+(defn gen-inspiration [artwork inspiration]
   [:li
-    [:a {:href (:url inspiration)}
+    [:a {:href (str "/" (:pid artwork) "/inspiration/" (:pid inspiration))}
       [:i {:class "ion-play"}]
         "Listen to the inspiration."]])
 
@@ -38,7 +38,7 @@
                               (time-coerce/from-sql-date (:created artwork)))]
      (if (> (count (:inspiration artwork)) 0)
        [:ul {:class "inspiration"}
-         (map gen-inspiration (:inspiration artwork))])
+         (map #(gen-inspiration artwork %) (:inspiration artwork))])
      [:ul {:class "sharing"}
       [:li
        [:a {:href (str "//twitter.com/share?url="
@@ -65,6 +65,10 @@
        (if-let [artwork (data/get-artwork pid)]
          {:status 200 :body (in-frame (gen-artwork artwork))} 
          {:status 404 :body (gen-404 pid)}))
+  (GET "/:artwork/inspiration/:inspiration" [artwork inspiration]
+       (if-let [inspiration (data/get-inspiration artwork inspiration)]
+         {:status 303 :headers {"Location" (:url inspiration)}}
+         {:status 404}))
   (route/resources "/static/")
   (route/not-found "Not Found"))
 
