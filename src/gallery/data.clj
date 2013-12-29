@@ -57,6 +57,7 @@
   (if (nil? (:url in))
     nil
     {:url (:url in)
+     :config (:config in)
      :description (:description in)}))
 
 (defn add-artwork [user artwork]

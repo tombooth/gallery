@@ -83,7 +83,12 @@
   (db-testing "stores description of artwork"
               (let [artwork (data/add-artwork nil {:url "" :description "foo"})
                     retrieved-artwork (data/get-artwork (:pid artwork))]
-                (is (= "foo" (:description retrieved-artwork))))))
+                (is (= "foo" (:description retrieved-artwork)))))
+
+  (db-testing "stores config of artwork"
+              (let [artwork (data/add-artwork nil {:url "" :config "asdf"})
+                    retrieved-artwork (data/get-artwork (:pid artwork))]
+                (is (= "asdf" (:config retrieved-artwork))))))
 
 
 

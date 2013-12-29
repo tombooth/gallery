@@ -42,5 +42,15 @@
        (is (= 200 (:status response)))
        (let [artworks (korma/select data/artworks)]
          (is (= 1 (count artworks)))
-         (is (= "foo" (-> artworks first :description)))))))
+         (is (= "foo" (-> artworks first :description))))))
+
+  (db-testing "test config through api"
+     (let [response (make-request :post (str "/" user-id)
+                                  private/all-routes
+                                  {:user-id user-id}
+                                  "{\"url\":\"asdf\",\"config\":\"foo\"}")]
+       (is (= 200 (:status response)))
+       (let [artworks (korma/select data/artworks)]
+         (is (= 1 (count artworks)))
+         (is (= "foo" (-> artworks first :config)))))))
 
