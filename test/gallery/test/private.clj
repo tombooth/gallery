@@ -32,5 +32,15 @@
                 (let [inspiration (korma/select data/inspiration)]
                   (is (= 1 (count inspiration)))
                   (is (= "a" (-> inspiration first :url)))
-                  (is (= "b" (-> inspiration first :mime_type)))))))
+                  (is (= "b" (-> inspiration first :mime_type))))))
+
+  (db-testing "test description through api"
+     (let [response (make-request :post (str "/" user-id)
+                                  private/all-routes
+                                  {:user-id user-id}
+                                  "{\"url\":\"asdf\",\"description\":\"foo\"}")]
+       (is (= 200 (:status response)))
+       (let [artworks (korma/select data/artworks)]
+         (is (= 1 (count artworks)))
+         (is (= "foo" (-> artworks first :description)))))))
 
