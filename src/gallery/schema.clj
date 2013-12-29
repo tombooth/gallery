@@ -13,6 +13,7 @@
                  (schema/integer :id :auto-inc :primary-key)
                  (schema/char :user_id [:refer :users :id :on-delete :set-null])
                  (schema/varchar :url 512 :not-null)
+                 (schema/varchar :description 1000)
                  (schema/varchar :config 5000)
                  (schema/timestamp :created (schema/default (now)))))
   (lobos/create

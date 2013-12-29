@@ -56,7 +56,8 @@
 (defn valid-artwork [in]
   (if (nil? (:url in))
     nil
-    {:url (:url in)}))
+    {:url (:url in)
+     :description (:description in)}))
 
 (defn add-artwork [user artwork]
   (let [db-artwork (assoc artwork :user_id (:id user))

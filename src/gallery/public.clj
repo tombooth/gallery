@@ -32,7 +32,8 @@
     [:div {:class "notes"}
      [:h2 [:a {:href "/"} "Pollock"]]
      [:h3 [:a {:href (str "/" (:pid artwork))} (str "Experimental #" (:pid artwork))]]
-     [:p "Some blurb about how this piece of work was made."]
+     (if (:description artwork)
+       [:p {:class "description"} (:description artwork)])
      [:p "digital canvas, binary paint."]
      [:p (time-format/unparse date-formatter
                               (time-coerce/from-sql-date (:created artwork)))]

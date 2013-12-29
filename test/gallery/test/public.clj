@@ -45,5 +45,18 @@
 
   (db-testing "inspiration fail"
               (let [response (make-request "/5r/inspiration/5r" public/all-routes)]
-                (is (= 404 (:status response))))))
+                (is (= 404 (:status response)))))
+
+  (db-testing "description not included"
+              (let [artwork (data/add-artwork nil {:url ""})
+                    response (make-request (str "/" (:pid artwork)) public/all-routes)]
+                (is (= 200 (:status response)))
+                (is (nil? (re-matches #".*<p class=\"description\">.*"
+                                      (:body response))))))
+
+  (db-testing "description included"
+              (let [artwork (data/add-artwork nil {:url "" :description "asdfasdf"})
+                    response (make-request (str "/" (:pid artwork)) public/all-routes)]
+                (is (= 200 (:status response)))
+                (is (re-matches #".*asdfasdf.*" (:body response))))))
 

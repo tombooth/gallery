@@ -78,7 +78,12 @@
                     inspiration (data/add-inspiration (:pid artwork) {:url "" :mime_type ""})
                     recent-artworks (data/get-recent-artworks 1)]
                 (is (= (:pid inspiration)
-                       (-> recent-artworks first :inspiration first :pid))))))
+                       (-> recent-artworks first :inspiration first :pid)))))
+
+  (db-testing "stores description of artwork"
+              (let [artwork (data/add-artwork nil {:url "" :description "foo"})
+                    retrieved-artwork (data/get-artwork (:pid artwork))]
+                (is (= "foo" (:description retrieved-artwork))))))
 
 
 
