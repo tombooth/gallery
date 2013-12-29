@@ -8,7 +8,9 @@
 
 (defroutes all-routes
 
-  (POST "/:user-id" [user-id :as request]
+  ;; user-id should be passed through as a query string if wanted
+  
+  (POST "/artwork" [user-id :as request]
         (let [artwork-json (json/parse-string (slurp (:body request)) true)]
           (if-let [artwork (data/valid-artwork artwork-json)]
             (let [user (data/get-or-create-user user-id)]
@@ -17,11 +19,10 @@
                       (data/add-artwork user artwork))})
             {:status 400})))
 
-  (POST "/:user-id/:artwork-id" [user-id artwork-id :as request]
+  (POST "/artwork/:artwork-id/inspiration" [artwork-id :as request]
         (let [inspiration-json (json/parse-string (slurp (:body request)) true)
-              user (data/get-user user-id)
               artwork (data/get-artwork artwork-id)]
-          (if (and user artwork)
+          (if artwork
             {:status 200
              :body (json/generate-string
                     (data/add-inspiration (:pid artwork) inspiration-json))}

@@ -11,21 +11,21 @@
   
   (testing "test end to end"
     (db-test
-     (let [response (make-request :post (str "/" user-id)
+     (let [response (make-request :post "/artwork"
                                   private/handler
                                   {:user-id user-id}
-                                  "{\"url\":\"asdf\",\"inspiration_url\":\"\"}")]
+                                  "{\"url\":\"asdf\"}")]
        (is (= 200 (:status response)))
        (is (not (nil? (data/get-user user-id))))
        (let [artworks (korma/select data/artworks)]
          (is (= 1 (count artworks)))
-         (is (= "asdf" (-> artworks first :url)))))))
+         (is (= "asdf" (-> artworks first :url)))
+         (is (= user-id (-> artworks first :user_id)))))))
 
   (db-testing "test add inspiration end point"
-              (let [user (data/create-user user-id)
-                    artwork (data/add-artwork user-id {:url ""})
+              (let [artwork (data/add-artwork nil {:url ""})
                     artwork-pid (:pid artwork)
-                    response (make-request :post (str "/" user-id "/" artwork-pid)
+                    response (make-request :post (str "/artwork/" artwork-pid "/inspiration")
                                            private/handler {}
                                            "{\"url\":\"a\",\"mime_type\":\"b\"}")]
                 (is (= 200 (:status response)))
@@ -35,7 +35,7 @@
                   (is (= "b" (-> inspiration first :mime_type))))))
 
   (db-testing "test description through api"
-     (let [response (make-request :post (str "/" user-id)
+     (let [response (make-request :post "/artwork"
                                   private/handler
                                   {:user-id user-id}
                                   "{\"url\":\"asdf\",\"description\":\"foo\"}")]
@@ -45,7 +45,7 @@
          (is (= "foo" (-> artworks first :description))))))
 
   (db-testing "test config through api"
-     (let [response (make-request :post (str "/" user-id)
+     (let [response (make-request :post "/artwork"
                                   private/handler
                                   {:user-id user-id}
                                   "{\"url\":\"asdf\",\"config\":\"foo\"}")]
