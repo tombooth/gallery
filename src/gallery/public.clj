@@ -73,4 +73,8 @@
   (route/resources "/static/")
   (route/not-found "Not Found"))
 
+(def handler (-> all-routes
+                 ring.middleware.keyword-params/wrap-keyword-params
+                 ring.middleware.nested-params/wrap-nested-params
+                 ring.middleware.params/wrap-params))
 

@@ -56,7 +56,7 @@ Options:
       (or (nil? arg-map)
           (arg-map "--help")) (println usage-string)
           (arg-map "--version") (println version)
-          (arg-map "public") (start-web arg-map public/all-routes)
-          (arg-map "private") (start-web arg-map private/all-routes)
+          (arg-map "public") (start-web arg-map public/handler)
+          (arg-map "private") (start-web arg-map private/handler)
           (arg-map "schema") (exec-schema arg-map))))
 

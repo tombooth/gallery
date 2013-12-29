@@ -12,7 +12,7 @@
   (testing "test end to end"
     (db-test
      (let [response (make-request :post (str "/" user-id)
-                                  private/all-routes
+                                  private/handler
                                   {:user-id user-id}
                                   "{\"url\":\"asdf\",\"inspiration_url\":\"\"}")]
        (is (= 200 (:status response)))
@@ -26,7 +26,7 @@
                     artwork (data/add-artwork user-id {:url ""})
                     artwork-pid (:pid artwork)
                     response (make-request :post (str "/" user-id "/" artwork-pid)
-                                           private/all-routes {}
+                                           private/handler {}
                                            "{\"url\":\"a\",\"mime_type\":\"b\"}")]
                 (is (= 200 (:status response)))
                 (let [inspiration (korma/select data/inspiration)]
@@ -36,7 +36,7 @@
 
   (db-testing "test description through api"
      (let [response (make-request :post (str "/" user-id)
-                                  private/all-routes
+                                  private/handler
                                   {:user-id user-id}
                                   "{\"url\":\"asdf\",\"description\":\"foo\"}")]
        (is (= 200 (:status response)))
@@ -46,7 +46,7 @@
 
   (db-testing "test config through api"
      (let [response (make-request :post (str "/" user-id)
-                                  private/all-routes
+                                  private/handler
                                   {:user-id user-id}
                                   "{\"url\":\"asdf\",\"config\":\"foo\"}")]
        (is (= 200 (:status response)))
