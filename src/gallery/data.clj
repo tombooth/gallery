@@ -55,11 +55,13 @@
                          (map add-pid-to-row (:inspiration artwork)))))
 
 (defn valid-artwork [in]
-  (if (nil? (:url in))
+  (if (or (nil? (:url in))
+          (nil? (:mime_type in)))
     nil
     {:url (:url in)
      :config (:config in)
-     :description (:description in)}))
+     :description (:description in)
+     :mime_type (:mime_type in)}))
 
 (defn add-artwork [user artwork]
   (let [db-artwork (assoc artwork :user_id (:id user))

@@ -14,7 +14,7 @@
      (let [response (make-request :post "/artwork"
                                   private/handler
                                   {:user-id user-id}
-                                  "{\"url\":\"asdf\"}")]
+                                  "{\"url\":\"asdf\",\"mime_type\":\"mime\"}")]
        (is (= 200 (:status response)))
        (is (not (nil? (data/get-user user-id))))
        (let [artworks (korma/select data/artworks)]
@@ -23,7 +23,7 @@
          (is (= user-id (-> artworks first :user_id)))))))
 
   (db-testing "test add inspiration end point"
-              (let [artwork (data/add-artwork nil {:url ""})
+              (let [artwork (data/add-artwork nil {:url "" :mime_type ""})
                     artwork-pid (:pid artwork)
                     response (make-request :post (str "/artwork/" artwork-pid "/inspiration")
                                            private/handler {}
@@ -38,7 +38,7 @@
      (let [response (make-request :post "/artwork"
                                   private/handler
                                   {:user-id user-id}
-                                  "{\"url\":\"asdf\",\"description\":\"foo\"}")]
+                                  "{\"url\":\"asdf\",\"mime_type\":\"mime\",\"description\":\"foo\"}")]
        (is (= 200 (:status response)))
        (let [artworks (korma/select data/artworks)]
          (is (= 1 (count artworks)))
@@ -48,7 +48,7 @@
      (let [response (make-request :post "/artwork"
                                   private/handler
                                   {:user-id user-id}
-                                  "{\"url\":\"asdf\",\"config\":\"foo\"}")]
+                                  "{\"url\":\"asdf\",\"mime_type\":\"mime\",\"config\":\"foo\"}")]
        (is (= 200 (:status response)))
        (let [artworks (korma/select data/artworks)]
          (is (= 1 (count artworks)))

@@ -7,7 +7,7 @@
 
 (def user-id (apply str (repeat 64 "4")))
 
-(def artwork {:url "url"})
+(def artwork {:url "url" :mime_type ""})
 
 
 
@@ -25,9 +25,12 @@
 (deftest artwork-unit-tests
   (testing "validating an artwork"
     (is (nil? (data/valid-artwork {})))
-    (let [artwork {:url "foo" :id 1}
+    (is (nil? (data/valid-artwork {:url ""})))
+    (is (nil? (data/valid-artwork {:mime_type ""})))
+    (let [artwork {:url "foo" :mime_type "bar" :id 1}
           validated-artwork (data/valid-artwork artwork)]
       (is (and (= "foo" (:url validated-artwork))
+               (= "bar" (:mime_type validated-artwork))
                (nil? (:id validated-artwork)))))))
 
 
@@ -44,17 +47,17 @@
   (testing "recent 5 makes sense"
     (db-test
      (data/add-artwork nil
-                       {:url "1" :created (sql-stamp 2013 12 25 12 3)})
+                       {:url "1" :mime_type "" :created (sql-stamp 2013 12 25 12 3)})
      (data/add-artwork nil
-                       {:url "2" :created (sql-stamp 2013 12 25 12 0)})
+                       {:url "2" :mime_type "" :created (sql-stamp 2013 12 25 12 0)})
      (data/add-artwork nil
-                       {:url "3" :created (sql-stamp 2013 12 25 12 4)})
+                       {:url "3" :mime_type "" :created (sql-stamp 2013 12 25 12 4)})
      (data/add-artwork nil
-                       {:url "4" :created (sql-stamp 2013 12 25 12 2)})
+                       {:url "4" :mime_type "" :created (sql-stamp 2013 12 25 12 2)})
      (data/add-artwork nil
-                       {:url "5" :created (sql-stamp 2013 12 25 12 1)})
+                       {:url "5" :mime_type "" :created (sql-stamp 2013 12 25 12 1)})
      (data/add-artwork nil
-                       {:url "6" :created (sql-stamp 2013 12 25 11 0)})
+                       {:url "6" :mime_type "" :created (sql-stamp 2013 12 25 11 0)})
      (let [most-recent (data/get-recent-artworks 5)]
        (is (= 5 (count most-recent)))
        (is (= "3" (-> most-recent first :url)))
@@ -78,19 +81,19 @@
                   (is (every? #(-> % :pid nil? not) (:inspiration retrieved-artwork))))))
 
   (db-testing "recent 1 with inspiration"
-              (let [artwork (data/add-artwork nil {:url ""})
+              (let [artwork (data/add-artwork nil {:url "" :mime_type ""})
                     inspiration (data/add-inspiration (:pid artwork) {:url "" :mime_type ""})
                     recent-artworks (data/get-recent-artworks 1)]
                 (is (= (:pid inspiration)
                        (-> recent-artworks first :inspiration first :pid)))))
 
   (db-testing "stores description of artwork"
-              (let [artwork (data/add-artwork nil {:url "" :description "foo"})
+              (let [artwork (data/add-artwork nil {:url "" :mime_type "" :description "foo"})
                     retrieved-artwork (data/get-artwork (:pid artwork))]
                 (is (= "foo" (:description retrieved-artwork)))))
 
   (db-testing "stores config of artwork"
-              (let [artwork (data/add-artwork nil {:url "" :config "asdf"})
+              (let [artwork (data/add-artwork nil {:url "" :mime_type "" :config "asdf"})
                     retrieved-artwork (data/get-artwork (:pid artwork))]
                 (is (= "asdf" (:config retrieved-artwork))))))
 
@@ -114,7 +117,7 @@
   
   (db-testing "add some inspiration"
     (data/create-user user-id)
-    (let [artwork (data/add-artwork {:id user-id} {:url ""})
+    (let [artwork (data/add-artwork {:id user-id} {:url "" :mime_type ""})
           artwork-pid (:pid artwork)
           artwork-id (hashids/decrypt artwork-pid data/hashids-salt)
           saved-inspiration (data/add-inspiration (:pid artwork) {:url "" :mime_type ""})]
@@ -129,11 +132,11 @@
               (is (nil? (data/get-inspiration "5r" "5r"))))
 
   (db-testing "getting inspiration if only artwork"
-              (let [artwork (data/add-artwork nil {:url ""})]
+              (let [artwork (data/add-artwork nil {:url "" :mime_type ""})]
                 (is (nil? (data/get-inspiration (:pid artwork) "5r")))))
 
   (db-testing "getting inspiration"
-              (let [artwork (data/add-artwork nil {:url ""})
+              (let [artwork (data/add-artwork nil {:url "" :mime_type ""})
                     artwork-pid (:pid artwork)
                     inspiration (data/add-inspiration artwork-pid {:url "foo" :mime_type ""})
                     inspiration-pid (:pid artwork)

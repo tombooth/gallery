@@ -7,13 +7,13 @@
 
 (deftest public-integration-tests
   (testing "200/404"
-    (db-test (let [artwork (data/add-artwork nil {:url ""})]
+    (db-test (let [artwork (data/add-artwork nil {:url "" :mime_type ""})]
                (is (= 200 (:status (make-request (str "/" (:pid artwork))
                                                  public/handler))))
                (is (= 404 (:status (make-request "/7n" public/handler)))))))
   
   (db-testing "number of inspiration matches"
-              (let [artwork (data/add-artwork nil {:url ""})
+              (let [artwork (data/add-artwork nil {:url "" :mime_type ""})
                     artwork-pid (:pid artwork)
                     inspiration-1 (data/add-inspiration artwork-pid {:url "1" :mime_type ""})
                     i-1-pid (:pid inspiration-1)
@@ -25,14 +25,14 @@
                                                  "<a href=\"/" artwork-pid "/inspiration/" i-2-pid "\">.*")) (:body response)))))
   
   (db-testing "inspiration not there if none"
-              (let [artwork (data/add-artwork nil {:url ""})
+              (let [artwork (data/add-artwork nil {:url "" :mime_type ""})
                     response (make-request (str "/" (:pid artwork)) public/handler)]
                 (is (nil? (re-matches #".*<ul class=\"inspiration\">.*"
                                       (:body response))))))
 
   (db-testing "inspiration redirect"
               (let [inspiration-url "http://google.co.uk"
-                    artwork (data/add-artwork nil {:url ""})
+                    artwork (data/add-artwork nil {:url "" :mime_type ""})
                     artwork-pid (:pid artwork)
                     inspiration (data/add-inspiration artwork-pid
                                                       {:url inspiration-url :mime_type ""})
@@ -48,14 +48,15 @@
                 (is (= 404 (:status response)))))
 
   (db-testing "description not included"
-              (let [artwork (data/add-artwork nil {:url ""})
+              (let [artwork (data/add-artwork nil {:url "" :mime_type ""})
                     response (make-request (str "/" (:pid artwork)) public/handler)]
                 (is (= 200 (:status response)))
                 (is (nil? (re-matches #".*<p class=\"description\">.*"
                                       (:body response))))))
 
   (db-testing "description included"
-              (let [artwork (data/add-artwork nil {:url "" :description "asdfasdf"})
+              (let [artwork (data/add-artwork nil {:url "" :mime_type ""
+                                                   :description "asdfasdf"})
                     response (make-request (str "/" (:pid artwork)) public/handler)]
                 (is (= 200 (:status response)))
                 (is (re-matches #".*asdfasdf.*" (:body response))))))
