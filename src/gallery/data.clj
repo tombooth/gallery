@@ -42,10 +42,11 @@
     user))
 
 (defn get-or-create-user [id]
-  (let [user (get-user id)]
-    (if (nil? user)
-      (create-user id)
-      user)))
+  (if (not (nil? id))
+    (let [user (get-user id)]
+      (if (nil? user)
+        (create-user id)
+        user))))
 
 ;; Artworks
 

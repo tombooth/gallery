@@ -14,7 +14,11 @@
 (deftest user-integration-test
   (testing "create and get"
     (db-test (data/create-user user-id)
-             (is (= user-id (:id (data/get-user user-id)))))))
+             (is (= user-id (:id (data/get-user user-id))))))
+
+  (db-testing "create and get when null"
+              (let [user (data/get-or-create-user nil)]
+                (is (nil? user)))))
 
 
 
