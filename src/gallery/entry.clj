@@ -4,6 +4,7 @@
             [gallery.private :as private]
             [gallery.data :as data]
             [gallery.schema :as schema]
+            [gallery.s3 :as s3]
             [ring.server.standalone :refer [serve]]
             [docopt.core :as dc]
             [docopt.match :as dm]
@@ -21,6 +22,11 @@
 (defn- start-web [arg-map handler]
   (let [port (Integer/parseInt (arg-map "--port"))]
     (data/setup-db (load-db arg-map))
+    (s3/setup {:access-key  (arg-map "--s3-access-key")
+               :secret-key  (arg-map "--s3-secret-key")
+               :endpoint    (arg-map "--s3-endpoint")
+               :bucket-name (arg-map "--s3-bucket")
+               :base-url    (arg-map "--s3-base-url")})
     (serve handler {:port port :open-browser? false})))
 
 (defn- exec-schema [arg-map]
@@ -34,7 +40,8 @@
 (def usage-string "Gallery
 
 Usage:
-  gallery (public|private) [--port=<num>] (--h2=<path>|--db=<db> --db-server=<server> --db-user=<user> --db-password=<password>)
+  gallery public [--port=<num>] (--h2=<path>|--db=<db> --db-server=<server> --db-user=<user> --db-password=<password>)
+  gallery private [--port=<num>] (--h2=<path>|--db=<db> --db-server=<server> --db-user=<user> --db-password=<password>) --s3-bucket=<name> --s3-access-key=<key> --s3-secret-key=<key> --s3-endpoint=<url> --s3-base-url=<url>
   gallery schema [--drop] (--h2=<path>|--db=<db> --db-server=<server> --db-user=<user> --db-password=<password>)
   gallery -h | --help
   gallery -v | --version
