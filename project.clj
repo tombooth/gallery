@@ -13,6 +13,7 @@
                  [cheshire "5.2.0"]
                  [hashobject/hashids "0.2.0"]
                  [clj-time "0.6.0"]
+                 [digest "1.4.3"]
                  [clj-aws-s3 "0.3.7"]]
   :plugins [[lein-ring "0.8.7"]]
   :main gallery.entry

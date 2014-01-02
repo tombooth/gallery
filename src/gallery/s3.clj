@@ -1,5 +1,6 @@
 (ns gallery.s3
-  [:require [aws.sdk.s3 :as s3]])
+  [:require [aws.sdk.s3 :as s3]
+            [digest]])
 
 (def s3-config (atom {}))
 
@@ -12,8 +13,7 @@
       (s3/create-bucket conf name))))
 
 (defn- generate-key [file]
-  ;; need to change this for something like SHA256 of the file
-  (str (System/currentTimeMillis) (rand-int 1000)))
+  (digest/sha-256 file))
 
 (defn upload-file [file]
   (let [conf @s3-config
